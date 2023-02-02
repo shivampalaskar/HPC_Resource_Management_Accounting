@@ -285,3 +285,26 @@ Then Check sinfo command on master
 Submit the Job
 --------------
 # srun -N1 /bin/hostname
+
+# srun -N1 
+
+Changing state of node
+----------------------
+# scontrol update nodename=c1 state=idle
+
+Some More Commands
+------------------
+
+# squeue
+
+# scancel <JOB-ID>
+
+# scontrol show node
+
+# scontrol show part
+
+# scontrol show <JOB-ID>
+
+# scontrol show job<space>job.no
+
+# sbatch script.sh

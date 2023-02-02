@@ -75,32 +75,37 @@ sacctmgr: show user
 
 sacctmgr: add cluster <Cluster-name>							-> If there is a problem in adding the Cluster refresh the slurmdbd in 
 sacctmgr: add account <Account-name>
-sacctmgr: add user <User-name> account=<Account-name>
+sacctmgr: add user <User-name> account=<Account-name>                         -> User should be a Linux user also
 
 sacctmgr: create  qos <qos-name> maxwall=2-00:00:00
 sacctmgr: show qos
+
+sacctmgr: create  qos <qos-name> priority=1000
+sacctmgr: show qos
+
+sacctmgr: remove user username account=<account-name>
+
 
 ADD qos to user
 ---------------
 sacctmgr: modify user <User-name> set qos+=<qos-name>
 
+sacctmgr: add qos <qos-name> <username>
+
+sacctmgr: remove qos <qos-name>
+
+show assoc format=cluster,user,qos
+
 
 Reservation
 -----------
 
+# scontrol create reservation=my_reservation starttime=2023-02-02T01:00:00 endtime=2023-02-02T01:05:00 users=<system_created_user> nodes=c[1-2]
 
+# sbatch --reservation=my_reservation -N4 job.sh
 
+# scontrol show reservation
 
-
-
-
-
-
-
-
-
-
-
-
+# scontrol delete reservation <reservation-name>
 
 
