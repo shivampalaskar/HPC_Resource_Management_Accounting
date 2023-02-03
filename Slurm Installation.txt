@@ -1,6 +1,6 @@
-**********************************
+***************************************
 	  Slurm Installation
-__________________________________
+_______________________________________
 
 3 Vms -> 1 master , 2 compute nodes
 CentOS Installation type : minimal
@@ -28,7 +28,7 @@ On c1 and c2 (ensure also on master)
 
 # yum install openssh* -y
 
-# yum install nfs-utils -y
+# yum install nfs-utils* -y
 
 # yum install chrony -y 
 
