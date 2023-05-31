@@ -3,8 +3,10 @@
 _______________________________________
 
 3 Vms -> 1 master , 2 compute nodes
-CentOS Installation type : minimal
-------------------------
+{Note: In Vmware ESXI (1 core = 1 CPU)and Virtualized Hardware Configuration taken is 8 CPUs and cores per socket 4 therefore number of Socket = 2}
+
+OS : CentOS 7 Installation type : minimal
+----------------------------------
 
 Pre-requisite -> Stop and disable firewall daemon and stop selinux 
   
