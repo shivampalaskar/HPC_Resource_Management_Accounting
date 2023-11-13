@@ -128,7 +128,37 @@ CRB repo is enabled and named: powertools
 
 # rpmbuild -ta slurm-23.02.6.tar.bz2   -> ( Note: Run after installing dependencies )
 
-#  
+After this operation slurm rpms will be created which we can list down using following command
+
+# ll /root/rpmbuild/RPMS/x86_64 
+
+
+Munge Key creation (on master)
+-------------------------------
+
+# /usr/sbin/create-munge-key -r       -> Using this command munge key will be created
+
+# ll /etc/munge
+
+# chown -R munge. /etc/munge/
+
+# chmod 400 /etc/munge/munge.key
+
+Copy the munge key to the compute nodes using the scp command
+
+# scp -rv /etc/munge/munge.key cn001:/etc/munge
+
+# scp -rv /etc/munge/munge.key cn002:/etc/munge
+
+
+Note : Also change the ownership of /etc/munge to munge user in compute nodes as well and change mod of the munge.key to 400 for user read only using the same commands as done in master node
+
+Then start the service of munge on master as well as on every node using the following command 
+
+# systemctl start munge
+
+# systemctl status munge  
+
 
 
 
