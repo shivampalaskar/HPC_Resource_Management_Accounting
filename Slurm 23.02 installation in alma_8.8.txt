@@ -1,0 +1,165 @@
+***** SLURM Installation in alma 8.8 ***** 
+------------------------------------------
+Setting up 3 VMs ->  1 Master , 2 Compute nodes (cn001,cn002)
+-------------------------------------------------------------
+
+On All Nodes or VMs 
+-------------------
+
+# dnf update --exclude=kernel*     -> This will update the linux packages but excludes the kernel related package
+
+# Disable selinux by changing SELINUX value in file  
+	-> vi /etc/selinux/config
+	     
+		SELINUX=disabled 
+
+# systemctl stop firewalld
+
+# systemctl disable firewalld
+
+Set-hostname by following command
+
+# hostnamectl set-hostname master 
+or 
+# vi /etc/hostname -> Change name in this file 
+
+
+# init 6 -> Reboot the system for taking changes into effect 
+
+
+----------------------------------------------------------------------
+
+On master
+---------
+
+# vi /etc/hosts -> add the ips' and hostname for knowing hosts 
+
+copy this hosts file to other nodes using scp command
+
+# scp /etc/hosts <ip_of_destination_node>:/etc/hosts
+
+-> check the connectivity of master with the compute nodes using ping command 
+
+# ping <hostname>
+
+Password-less SSH
+------------------
+
+# ssh-keygen
+# ssh-copy-id root@cn001        -> This command will ask for the 
+# ssh-copy-id root@cn002
+
+-> Try and test the passwordless ssh conncetion from master to the compute nodes
+
+Time Synchronization
+----------------------
+For synchronizing the time of the cluster we will using chrony package 
+
+# dnf install chrony -y    -> on all nodes  (Manual Cluster)
+
+# vi /etc/chrony.conf
+
+-> make edits on master
+    Add the line -> server 172.10.2.2 iburst
+    Uncomment the lines -> allow 172.10.2.0/24
+                        -> local stratum 10
+
+-> make edits on compute nodes 
+    Add the line -> server 172.10.2.2 iburst
+
+# systemctl restart chronyd
+
+NFS For File-sharing
+--------------------
+
+# dnf install nfs-utils* -y    -> on all nodes
+
+# vi /etc/exports
+
+-> add line >> /home/ *(rw,sync,no_root_squash)
+
+# systemctl start nfs-server
+
+# exportfs -arv
+
+
+on nodes 
+--------
+
+# showmount -e master
+
+# mount -t nfs master:/home /home
+
+# vi /etc/fstab
+	Add this line 
+		>> master:/home   /home   nfs    defaults   0 0
+
+-> for persistence of NFS 
+
+-----------------------------------------------------------------------
+
+Slurm Installation (SLURM Latest LTS version 23.02)
+-----------------------------------------------------------------------
+
+On master
+---------
+
+# cd ~/Downloads
+
+# wget https://download.schedmd.com/slurm/slurm-23.02.6.tar.bz2
+
+# dnf install mariadb-server mariadb-devel -y
+
+# dnf install epel-release -y       	-> Note: Also do this on all nodes 
+
+# /usr/bin/crb enable			-> Note: Also do this on all nodes
+
+-> Output : 
+Enabling CRB repo
+CRB repo is enabled and named: powertools
+
+# dnf install munge munge-libs munge-devel -y      -> Note: Also do this on all nodes
+
+# dnf install rpm-build -y
+
+# dnf install readline-devel perl-ExtUtils-Install pam-devel gcc -y
+
+# cd ~/Downloads
+
+# rpmbuild -ta slurm-23.02.6.tar.bz2   -> ( Note: Run after installing dependencies )
+
+#  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
