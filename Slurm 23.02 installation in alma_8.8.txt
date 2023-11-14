@@ -205,7 +205,9 @@ On master
 on Master
 ---------
 
-# cp /etc/slurm/slurm.conf.example /etc/slurm/slurm.conf 
+# cp /etc/slurm/slurm.conf.example /etc/slurm/slurm.conf
+
+# cp /etc/slurm/cgroup.conf.example /etc/slurm/cgroup.conf 
 
 # vi /etc/slurm/slurm.conf
 
@@ -241,8 +243,8 @@ On Compute nodes
 
 Add the output of above command from both the compute nodes and add in the conf file of slurm at the last (in master) just before the partition name line
 
->> Add >> Output >> NodeName=c1 CPUs=2 Boards=1 SocketsPerBoard=1 CoresPerSocket=2 ThreadsPerCore=1 RealMemory=7802
-			  NodeName=c2 CPUs=2 Boards=1 SocketsPerBoard=1 CoresPerSocket=2 ThreadsPerCore=1 RealMemory=7802
+>> Add >> Output >>       NodeName=cn001 CPUs=4 Boards=1 SocketsPerBoard=4 CoresPerSocket=1 ThreadsPerCore=1 RealMemory=7696
+			  NodeName=cn002 CPUs=4 Boards=1 SocketsPerBoard=4 CoresPerSocket=1 ThreadsPerCore=1 RealMemory=7696
 
 # vi /etc/slurm/slurm.conf
 
@@ -250,6 +252,41 @@ Add the output of above command from both the compute nodes and add in the conf 
 		SAVE and Exit
 
 
+---------------------------------------------------------------------
+Copying the Slurm configuration files on compute nodes of the cluster
+---------------------------------------------------------------------
+
+On master
+--------
+
+# scp /etc/slurm/slurm.conf root@cn001:/etc/slurm
+
+# scp /etc/slurm/slurm.conf root@cn002:/etc/slurm
+
+# scp /etc/slurm/cgroup.conf root@cn001:/etc/slurm
+
+# scp /etc/slurm/cgroup.conf root@cn002:/etc/slurm
+
+# systemctl start slurmctld
+
+# systemctl status slurmctld
+
+# systemctl enable slurmctld
+
+
+On Compute nodes
+----------------
+# systemctl start slurmd
+
+# systemctl status slurmd
+
+# systemctl enable slurmd
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+Now we can check sinfo command from any node it wil show the cluster nodes status and other information regarding partitions
+
+# sinfo
 
 
 
