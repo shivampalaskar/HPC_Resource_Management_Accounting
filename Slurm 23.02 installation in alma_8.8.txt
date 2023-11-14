@@ -122,11 +122,11 @@ CRB repo is enabled and named: powertools
 
 # dnf install rpm-build -y
 
-# dnf install readline-devel perl-ExtUtils-Install pam-devel gcc -y
+# dnf install readline-devel perl-ExtUtils-Install pam-devel gcc -y                   -> These are the dependencies required for building rpm
 
 # cd ~/Downloads
 
-# rpmbuild -ta slurm-23.02.6.tar.bz2   -> ( Note: Run after installing dependencies )
+# rpmbuild -ta slurm-23.02.6.tar.bz2                                                  -> ( Note: Run after installing dependencies )
 
 After this operation slurm rpms will be created which we can list down using following command
 
@@ -157,7 +157,106 @@ Then start the service of munge on master as well as on every node using the fol
 
 # systemctl start munge
 
-# systemctl status munge  
+# systemctl status munge
+
+# systemctl enable munge
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+On master  >> Install all the slurm rpms from the directory ~/rpmbuild/RPMS/x86_64 just leave the slurmd rpm because we don't want slurmd on master node
+
+On Compute nodes >> Install all the slurm rpms from the directory ~/rpmbuild/RPMS/x86_64 leave the slurmctld and slurmdbd rpms as they are to be installed on master node
+
+Note : Compute node may require following packages which will be downloaded as dependencies  >>
+                                mariadb-connector-c-config-3.1.11-2.el8_3.noarch
+                                mariadb-connector-c-3.1.11-2.el8_3.x86_64
+
+# yum install slurm* -y  	>> common command for all nodes
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Adding SLURM user on all nodes 
+------------------------------
+
+On master
+---------
+
+# export SLURMUSER=1500
+
+# groupadd -g $SLURMUSER slurm
+
+# useradd  -m -c "SLURM workload manager" -d /var/lib/slurm -u $SLURMUSER -g slurm  -s /bin/bash slurm
+
+>> Copy these three files using scp command 
+
+# scp -rv /etc/passwd cn001:/etc/passwd
+
+# scp -rv /etc/shadow cn001:/etc/shadow
+
+# scp -rv /etc/group cn001:/etc/group
+
+# scp -rv /etc/passwd cn002:/etc/passwd
+
+# scp -rv /etc/shadow cn002:/etc/shadow
+
+# scp -rv /etc/group cn002:/etc/group
+
+--------------------------------------------------------------
+
+on Master
+---------
+
+# cp /etc/slurm/slurm.conf.example /etc/slurm/slurm.conf 
+
+# vi /etc/slurm/slurm.conf
+
+	>> edit >>      ClusterName=PARAM Himalaya
+			SlurmctldHost=master
+			StateSaveLocation=/var/share/slurm/ctld
+			SlurmdSpoolDir=/var/share/slurm/d
+
+			Save and Exit
+
+# mkdir -p /var/share/slurm/ctld
+
+# mkdir -p /var/share/slurm/d
+
+# chown -R slurm:slurm /var/share/slurm
+
+# ll /var/share/slurm
+
+# touch /var/log/slurmctld.log
+
+On Compute nodes
+----------------
+
+# mkdir -p /var/share/slurm/d
+
+# chown -R slurm:slurm /var/share/slurm
+
+# ll /var/share/slurm
+
+# touch /var/log/slurmd.log
+
+# slurmd -C
+
+Add the output of above command from both the compute nodes and add in the conf file of slurm at the last (in master) just before the partition name line
+
+>> Add >> Output >> NodeName=c1 CPUs=2 Boards=1 SocketsPerBoard=1 CoresPerSocket=2 ThreadsPerCore=1 RealMemory=7802
+			  NodeName=c2 CPUs=2 Boards=1 SocketsPerBoard=1 CoresPerSocket=2 ThreadsPerCore=1 RealMemory=7802
+
+# vi /etc/slurm/slurm.conf
+
+    >> Add lines copied as directed
+		SAVE and Exit
+
+
+
+
+
+
+
+
+
 
 
 
