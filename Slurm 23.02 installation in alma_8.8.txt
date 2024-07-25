@@ -124,6 +124,8 @@ CRB repo is enabled and named: powertools
 
 # dnf install readline-devel perl-ExtUtils-Install pam-devel gcc -y                   -> These are the dependencies required for building rpm
 
+# dnf install make
+
 # cd ~/Downloads
 
 # rpmbuild -ta slurm-23.02.6.tar.bz2                                                  -> ( Note: Run after installing dependencies )
