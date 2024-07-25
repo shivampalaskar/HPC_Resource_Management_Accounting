@@ -3,6 +3,9 @@
 Setting up 3 VMs ->  1 Master , 2 Compute nodes (cn001,cn002)
 -------------------------------------------------------------
 
+# Provide static ip for VMs
+# Refere : https://medium.com/shehuawwal/how-to-assign-a-static-ip-address-to-a-vmware-workstation-vm-de7773f9ef19
+
 On All Nodes or VMs 
 -------------------
 
